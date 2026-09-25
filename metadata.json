@@ -1,0 +1,6 @@
+{
+  "name": "PetCare - Pet Care Marketplace & Live Safety Walk Tracking",
+  "description": "Production mobile application for verified pet-care service providers featuring dog walking with live GPS geofencing, dog training, pet grooming, pet boarding, and centralized ride-hailing dispatch matching.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

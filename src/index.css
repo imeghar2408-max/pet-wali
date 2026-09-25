@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #023423;
+  --color-primary-container: #1e4b38;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #8bbaa2;
+  --color-primary-fixed: #bdedd3;
+  --color-primary-fixed-dim: #a1d1b8;
+  --color-on-primary-fixed: #002114;
+  --color-on-primary-fixed-variant: #224f3c;
+
+  --color-secondary: #006d3c;
+  --color-secondary-container: #85f6ad;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #00723f;
+  --color-secondary-fixed: #88f9b0;
+  --color-secondary-fixed-dim: #6bdc96;
+
+  --color-tertiary: #412700;
+  --color-tertiary-container: #5f3b00;
+  --color-tertiary-fixed: #ffddb6;
+  --color-tertiary-fixed-dim: #ffb959;
+  --color-on-tertiary-container: #ee9f22;
+
+  --color-surface: #f9f9ff;
+  --color-surface-dim: #d4daea;
+  --color-surface-bright: #f9f9ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f1f3ff;
+  --color-surface-container: #e8eeff;
+  --color-surface-container-high: #e3e8f9;
+  --color-surface-container-highest: #dde2f3;
+  --color-surface-variant: #dde2f3;
+
+  --color-on-surface: #161c27;
+  --color-on-surface-variant: #414944;
+  --color-outline: #717973;
+  --color-outline-variant: #c0c8c2;
+
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #93000a;
+
+  --font-headline: "Plus Jakarta Sans", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-body);
+    color: var(--color-on-surface);
+    background-color: var(--color-surface);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-headline {
+    font-family: var(--font-headline);
+  }
+
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+
+  .material-symbols-fill {
+    font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+  }
+}
+
+/* Custom scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
