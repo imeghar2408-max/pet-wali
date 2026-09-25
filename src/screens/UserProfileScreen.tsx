@@ -9,8 +9,6 @@ export const UserProfileScreen: React.FC = () => {
     pets,
     bookings,
     payments,
-    setAppMode,
-    isAdmin,
     setCurrentTab,
     setPetIdModalPet,
     activePet,
@@ -496,30 +494,6 @@ export const UserProfileScreen: React.FC = () => {
           </div>
         </div>
       )}
-
-      {/* Shared Architecture Notice & Admin Console Launcher */}
-      <div className="bg-surface-container-low rounded-2xl p-4 border border-outline-variant/30 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-primary font-bold text-xs">
-            <span className="material-symbols-outlined text-[18px]">hub</span>
-            <span>Shared Platform Architecture</span>
-          </div>
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary uppercase">
-            Role: {user.role}
-          </span>
-        </div>
-        <p className="text-[11px] text-on-surface-variant leading-relaxed">
-          Unified API layer (`/api/*`), centralized database state, and role-based authorization gate. Only users with role <code className="font-mono bg-surface-container-high px-1 rounded text-primary">ADMIN</code> are granted console access.
-        </p>
-        <button
-          type="button"
-          onClick={() => setAppMode('ADMIN')}
-          className="w-full h-10 rounded-xl bg-slate-900 text-white font-headline font-semibold text-xs flex items-center justify-center gap-2 shadow-xs hover:bg-slate-800 transition-colors"
-        >
-          <span className="material-symbols-outlined text-[18px] text-emerald-400">admin_panel_settings</span>
-          <span>Launch Admin Operations Console</span>
-        </button>
-      </div>
 
       {/* Logout */}
       <button

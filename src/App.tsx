@@ -24,32 +24,16 @@ import { ServicesMarketplaceScreen } from './screens/ServicesMarketplaceScreen.t
 import { SafeZoneScreen } from './screens/SafeZoneScreen.tsx';
 import { SplashOnboardingAuthModal } from './components/SplashOnboardingAuthModal.tsx';
 import { ReviewModal } from './components/ReviewModal.tsx';
-import { ProviderApp } from './provider/ProviderApp.tsx';
-import { AdminApp } from './admin/AdminApp.tsx';
 import { Pet } from './types/index.ts';
 
 const MainApp: React.FC = () => {
-  const { currentTab, appMode, setAppMode } = useApp();
+  const { currentTab } = useApp();
 
   const [notificationDrawerOpen, setNotificationDrawerOpen] = useState(false);
   const [addPetModalOpen, setAddPetModalOpen] = useState(false);
   const [editingPet, setEditingPet] = useState<Pet | null>(null);
   const [quickSettingsOpen, setQuickSettingsOpen] = useState(false);
 
-  // Render the PetCare Provider Captain application (Default Primary Experience)
-  if (appMode === 'PROVIDER') {
-    return (
-      <ProviderApp
-        onSwitchAppMode={(mode) => setAppMode(mode)}
-        currentAppMode={appMode}
-      />
-    );
-  }
-
-  // If in Admin Mode, render the dedicated professional SaaS Operations console
-  if (appMode === 'ADMIN') {
-    return <AdminApp />;
-  }
 
   // Determine back arrow visibility in header
   const isSubScreen =

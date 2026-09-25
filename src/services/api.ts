@@ -65,11 +65,11 @@ class PetCareStore {
   user: User = getStored('user', initialUser);
   users: User[] = getStored('users', initialUsers);
   pets: Pet[] = getStored('pets', initialPets);
-  services: ServiceCategory[] = getStored('services', initialServices);
-  providers: Provider[] = getStored('providers', initialProviders);
-  bookings: Booking[] = getStored('bookings', initialBookings);
-  activeWalk: WalkSession | null = getStored('active_walk', initialWalkSession);
-  emergencies: EmergencyIncident[] = getStored('emergencies', initialEmergencies);
+  services: ServiceCategory[] = initialServices;
+  providers: Provider[] = initialProviders.filter((p) => p.serviceTypes.some((service) => ['dog-walking', 'grooming', 'training'].includes(service))); 
+  bookings: Booking[] = getStored('bookings', initialBookings).filter((b) => ['srv_dog_walking', 'srv_grooming', 'srv_training'].includes(b.serviceId));
+  activeWalk: WalkSession | null = null;
+  emergencies: EmergencyIncident[] = []; 
   conversations: Conversation[] = getStored('conversations', initialConversations);
   messages: Record<string, Message[]> = getStored('messages', initialMessages);
   notifications: NotificationItem[] = getStored('notifications', initialNotifications);
@@ -78,7 +78,7 @@ class PetCareStore {
   platformSettings: PlatformSettings = getStored('platform_settings', initialPlatformSettings);
   adminBroadcasts: AdminBroadcastNotification[] = getStored('admin_broadcasts', initialAdminBroadcasts);
   auditLogs: AdminAuditLog[] = getStored('audit_logs', initialAuditLogs);
-  serviceReports: ServiceReport[] = getStored('service_reports', initialServiceReports);
+  serviceReports: ServiceReport[] = getStored('service_reports', initialServiceReports).filter((report) => report.serviceType !== 'PET_BOARDING');
 
   listeners: Set<() => void> = new Set();
 
@@ -189,7 +189,7 @@ export const api = {
 
   // Services
   async getServices(): Promise<ServiceCategory[]> {
-    return [...store.services];
+    return [...initialServices];
   },
 
   // Providers

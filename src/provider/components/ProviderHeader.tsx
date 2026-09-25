@@ -11,7 +11,6 @@ import {
   Power,
   Bell,
   ChevronDown,
-  Layers,
   Sparkles,
   Smartphone,
   Star,
@@ -22,15 +21,9 @@ import {
   Award,
 } from 'lucide-react';
 
-interface ProviderHeaderProps {
-  onSwitchAppMode: (mode: 'PROVIDER' | 'USER' | 'ADMIN') => void;
-  currentAppMode: 'PROVIDER' | 'USER' | 'ADMIN';
-}
 
-export const ProviderHeader: React.FC<ProviderHeaderProps> = ({
-  onSwitchAppMode,
-  currentAppMode,
-}) => {
+
+export const ProviderHeader: React.FC = () => {
   const {
     isOnline,
     toggleOnline,
@@ -43,7 +36,6 @@ export const ProviderHeader: React.FC<ProviderHeaderProps> = ({
   } = useProviderApp();
 
   const [showDispatchMenu, setShowDispatchMenu] = useState(false);
-  const [showModeMenu, setShowModeMenu] = useState(false);
   const [showNotifDrawer, setShowNotifDrawer] = useState(false);
   const [notifFilter, setNotifFilter] = useState<'ALL' | 'ASSIGNMENT' | 'SAFETY' | 'RATING' | 'PAYMENT'>('ALL');
 
@@ -187,79 +179,6 @@ export const ProviderHeader: React.FC<ProviderHeaderProps> = ({
                     <span>✂️</span> Pet Grooming (Bella · ₹750)
                   </span>
                   <span className="text-[10px] text-emerald-600 bg-emerald-50 px-1 rounded">1.8km</span>
-                </button>
-                <button
-                  onClick={() => {
-                    dispatchSimulatedRequest('PET_BOARDING');
-                    setShowDispatchMenu(false);
-                  }}
-                  className="w-full text-left px-2.5 py-2 hover:bg-slate-50 rounded-lg flex items-center justify-between text-slate-700 font-medium"
-                >
-                  <span className="flex items-center gap-2">
-                    <span>🏠</span> Pet Boarding (Milo · ₹1400)
-                  </span>
-                  <span className="text-[10px] text-emerald-600 bg-emerald-50 px-1 rounded">4.2km</span>
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* App Switcher Dropdown (Provider ⇋ User ⇋ Admin) */}
-          <div className="relative">
-            <button
-              onClick={() => setShowModeMenu(!showModeMenu)}
-              className="p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
-              title="Switch Application View"
-            >
-              <Layers className="w-4 h-4" />
-            </button>
-
-            {showModeMenu && (
-              <div className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-slate-100 p-1.5 z-50 text-xs">
-                <div className="px-2 py-1 border-b border-slate-100 text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
-                  Switch App View
-                </div>
-                <button
-                  onClick={() => {
-                    onSwitchAppMode('PROVIDER');
-                    setShowModeMenu(false);
-                  }}
-                  className={`w-full text-left px-2 py-1.5 rounded-lg flex items-center justify-between ${
-                    currentAppMode === 'PROVIDER'
-                      ? 'bg-emerald-50 text-emerald-800 font-bold'
-                      : 'text-slate-700 hover:bg-slate-50'
-                  }`}
-                >
-                  <span>🐕 PetCare Provider</span>
-                  {currentAppMode === 'PROVIDER' && <span className="text-[10px] text-emerald-600">● Active</span>}
-                </button>
-                <button
-                  onClick={() => {
-                    onSwitchAppMode('USER');
-                    setShowModeMenu(false);
-                  }}
-                  className={`w-full text-left px-2 py-1.5 rounded-lg flex items-center justify-between ${
-                    currentAppMode === 'USER'
-                      ? 'bg-emerald-50 text-emerald-800 font-bold'
-                      : 'text-slate-700 hover:bg-slate-50'
-                  }`}
-                >
-                  <span>👤 Pet Owner App</span>
-                  {currentAppMode === 'USER' && <span className="text-[10px] text-emerald-600">● Active</span>}
-                </button>
-                <button
-                  onClick={() => {
-                    onSwitchAppMode('ADMIN');
-                    setShowModeMenu(false);
-                  }}
-                  className={`w-full text-left px-2 py-1.5 rounded-lg flex items-center justify-between ${
-                    currentAppMode === 'ADMIN'
-                      ? 'bg-emerald-50 text-emerald-800 font-bold'
-                      : 'text-slate-700 hover:bg-slate-50'
-                  }`}
-                >
-                  <span>🛡️ Operations Console</span>
-                  {currentAppMode === 'ADMIN' && <span className="text-[10px] text-emerald-600">● Active</span>}
                 </button>
               </div>
             )}

@@ -14,7 +14,6 @@ import { ArrivalAndHandoverScreen } from './screens/ArrivalAndHandoverScreen.tsx
 import { LiveWalkScreen } from './screens/LiveWalkScreen.tsx';
 import { LiveTrainingScreen } from './screens/LiveTrainingScreen.tsx';
 import { LiveGroomingScreen } from './screens/LiveGroomingScreen.tsx';
-import { LiveBoardingScreen } from './screens/LiveBoardingScreen.tsx';
 import { ServiceCompletionSummary } from './screens/ServiceCompletionSummary.tsx';
 import { ProviderEarningsScreen } from './screens/ProviderEarningsScreen.tsx';
 import { ProviderScheduleScreen } from './screens/ProviderScheduleScreen.tsx';
@@ -26,12 +25,9 @@ import { EmergencySosModal } from './components/EmergencySosModal.tsx';
 import { AccidentDetectionModal } from './components/AccidentDetectionModal.tsx';
 import { Star, CheckCircle2 } from 'lucide-react';
 
-interface ProviderMainProps {
-  onSwitchAppMode: (mode: 'PROVIDER' | 'USER' | 'ADMIN') => void;
-  currentAppMode: 'PROVIDER' | 'USER' | 'ADMIN';
-}
 
-const ProviderMain: React.FC<ProviderMainProps> = ({ onSwitchAppMode, currentAppMode }) => {
+
+const ProviderMain: React.FC = () => {
   const {
     currentTab,
     subView,
@@ -58,9 +54,6 @@ const ProviderMain: React.FC<ProviderMainProps> = ({ onSwitchAppMode, currentApp
       if (activeAssignment?.serviceType === 'PET_GROOMER') {
         return <LiveGroomingScreen />;
       }
-      if (activeAssignment?.serviceType === 'PET_BOARDING') {
-        return <LiveBoardingScreen />;
-      }
       return <LiveWalkScreen />;
     }
     if (subView === 'completion-summary') {
@@ -72,10 +65,7 @@ const ProviderMain: React.FC<ProviderMainProps> = ({ onSwitchAppMode, currentApp
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col antialiased">
       {/* Top Header */}
-      <ProviderHeader
-        onSwitchAppMode={onSwitchAppMode}
-        currentAppMode={currentAppMode}
-      />
+      <ProviderHeader />
 
       {/* Real-time Customer Rating Received Toast Alert */}
       {latestCustomerRatingAlert && (
@@ -138,10 +128,10 @@ const ProviderMain: React.FC<ProviderMainProps> = ({ onSwitchAppMode, currentApp
   );
 };
 
-export const ProviderApp: React.FC<ProviderMainProps> = (props) => {
+export const ProviderApp: React.FC = () => {
   return (
     <ProviderAppProvider>
-      <ProviderMain {...props} />
+      <ProviderMain />
     </ProviderAppProvider>
   );
 };

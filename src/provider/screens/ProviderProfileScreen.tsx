@@ -70,7 +70,6 @@ export const ProviderProfileScreen: React.FC = () => {
     { id: 'DOG_WALKER', label: 'Dog Walker', icon: '🐕', rateKey: 'dogWalking' },
     { id: 'DOG_TRAINER', label: 'Dog Trainer', icon: '🎓', rateKey: 'dogTraining' },
     { id: 'PET_GROOMER', label: 'Pet Groomer', icon: '✂️', rateKey: 'petGrooming' },
-    { id: 'PET_BOARDING', label: 'Pet Boarding Provider', icon: '🏠', rateKey: 'petBoarding' },
   ];
 
   return (
@@ -256,7 +255,7 @@ export const ProviderProfileScreen: React.FC = () => {
         </div>
       </div>
 
-      {/* 4. Service Type Selection (Strictly Walker, Trainer, Groomer, Boarding - NO VET) */}
+      {/* 4. Service Type Selection (Strictly Walker, Trainer, Groomer, Training and grooming) */}
       <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-xs space-y-3">
         <div>
           <h3 className="text-sm font-bold text-slate-900">Services Offered</h3>

@@ -99,7 +99,7 @@ export const BookingScreen: React.FC = () => {
         baseFee: calculatedBaseFee,
         safetyFee,
         totalAmount,
-        status: 'Confirmed',
+        status: 'MATCHING',
         specialInstructions: specialInstructions || undefined,
         safeZoneConfig: isWalking
           ? {
@@ -142,13 +142,13 @@ export const BookingScreen: React.FC = () => {
 
           <div>
             <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-headline text-[11px] font-bold uppercase tracking-wider">
-              Booking Confirmed &amp; Protected
+              Request Sent · Matching
             </span>
             <h1 className="font-headline font-bold text-2xl text-primary mt-2">
               You&apos;re All Set!
             </h1>
             <p className="text-xs text-on-surface-variant max-w-xs mx-auto mt-1">
-              Your appointment is secured. {chosenProvider.name.split(' ')[0]} has accepted and received {chosenPet.name}&apos;s profile.
+              We&apos;re finding a Captain for {chosenPet.name}. You&apos;ll review and confirm the Captain before the booking is confirmed.
             </p>
           </div>
         </div>

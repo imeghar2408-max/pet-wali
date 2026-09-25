@@ -92,8 +92,8 @@ interface AppContextType {
   setPetIdModalPet: (pet: Pet | null) => void;
 
   // Dual App Mode & Admin Navigation
-  appMode: 'PROVIDER' | 'USER' | 'ADMIN';
-  setAppMode: (mode: 'PROVIDER' | 'USER' | 'ADMIN') => void;
+  appMode: 'PROVIDER' | 'USER';
+  setAppMode: (mode: 'PROVIDER' | 'USER') => void;
   adminTab: AdminTab;
   setAdminTab: (tab: AdminTab) => void;
   isAdmin: boolean;
@@ -184,7 +184,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [adminBroadcasts, setAdminBroadcasts] = useState<AdminBroadcastNotification[]>(store.adminBroadcasts);
   const [auditLogs, setAuditLogs] = useState<AdminAuditLog[]>(store.auditLogs);
 
-  const [appMode, setAppMode] = useState<'PROVIDER' | 'USER' | 'ADMIN'>('PROVIDER');
+  const [appMode, setAppMode] = useState<'PROVIDER' | 'USER'>('PROVIDER');
   const [adminTab, setAdminTab] = useState<AdminTab>('dashboard');
   const [currentTab, setCurrentTab] = useState<NavTab>('home');
   const [bookingServiceSlug, setBookingServiceSlug] = useState<string>('dog-walking');
@@ -455,7 +455,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     await api.rateServiceReport(reportId, rating, comment);
   };
 
-  const isAdmin = user.role === 'ADMIN';
+  const isAdmin = false;
 
   return (
     <AppContext.Provider

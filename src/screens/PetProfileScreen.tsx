@@ -20,7 +20,7 @@ export const PetProfileScreen: React.FC<PetProfileScreenProps> = ({ onOpenEditPe
   } = useApp();
 
   const [shareSuccess, setShareSuccess] = useState<boolean>(false);
-  const [activityFilter, setActivityFilter] = useState<'ALL' | 'DOG_WALKER' | 'DOG_TRAINER' | 'PET_GROOMER' | 'PET_BOARDING'>('ALL');
+  const [activityFilter, setActivityFilter] = useState<'ALL' | 'DOG_WALKER' | 'DOG_TRAINER' | 'PET_GROOMER'>('ALL');
 
   const handleShareDossier = () => {
     navigator.clipboard?.writeText(
@@ -204,7 +204,6 @@ export const PetProfileScreen: React.FC<PetProfileScreenProps> = ({ onOpenEditPe
               { key: 'DOG_WALKER', label: '🦮 Dog Walk' },
               { key: 'DOG_TRAINER', label: '🎓 Training' },
               { key: 'PET_GROOMER', label: '✂️ Grooming' },
-              { key: 'PET_BOARDING', label: '🏠 Boarding' },
             ] as const
           ).map((tab) => {
             const isSelected = activityFilter === tab.key;
@@ -242,7 +241,7 @@ export const PetProfileScreen: React.FC<PetProfileScreenProps> = ({ onOpenEditPe
                   No activity history yet for {activePet.name}
                 </h4>
                 <p className="text-xs text-on-surface-variant max-w-xs leading-relaxed">
-                  Completed walks, training sessions, grooming, and boarding will generate detailed visual care reports here.
+                  Completed walking, training, and grooming services will generate care reports here.
                 </p>
                 <button
                   onClick={() => {
@@ -298,18 +297,8 @@ export const PetProfileScreen: React.FC<PetProfileScreenProps> = ({ onOpenEditPe
                         accent: 'border-l-purple-600',
                       };
                     }
-                    case 'PET_BOARDING': {
-                      const b = report as any;
-                      return {
-                        icon: '🏠',
-                        category: 'Boarding',
-                        headline: `${b.totalStayHours || 31.5} hours`,
-                        subtext: 'Meals, Walks & Play Logged · 100% Care',
-                        provider: b.providerName,
-                        date: b.date,
-                        accent: 'border-l-amber-600',
-                      };
-                    }
+                    default:
+                      return { icon: 'pets', category: 'Pet care', headline: 'Service report', subtext: '', provider: '', date: '', accent: 'border-l-slate-400' };
                   }
                 };
 
@@ -525,19 +514,7 @@ export const PetProfileScreen: React.FC<PetProfileScreenProps> = ({ onOpenEditPe
                   </span>
                 </div>
               </div>
-              {vac.isDue ? (
-                <button
-                  onClick={() => {
-                    setBookingServiceSlug('home-vet');
-                    setCurrentTab('service-booking');
-                  }}
-                  className="px-2.5 py-1 rounded-lg bg-tertiary-fixed-dim text-on-tertiary-fixed text-xs font-bold active:scale-95 transition-transform"
-                >
-                  Schedule
-                </button>
-              ) : (
-                <span className="text-xs text-secondary font-bold">{vac.status}</span>
-              )}
+              <span className="text-xs text-secondary font-bold">{vac.status}</span>
             </div>
           ))}
         </div>
@@ -612,19 +589,6 @@ export const PetProfileScreen: React.FC<PetProfileScreenProps> = ({ onOpenEditPe
               content_cut
             </span>
             <span className="text-xs text-on-primary font-semibold">Grooming</span>
-          </button>
-
-          <button
-            onClick={() => {
-              setBookingServiceSlug('home-vet');
-              setCurrentTab('service-booking');
-            }}
-            className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-white/10 hover:bg-white/15 transition-colors text-center active:scale-95"
-          >
-            <span className="material-symbols-outlined text-primary-fixed text-[24px]">
-              medical_services
-            </span>
-            <span className="text-xs text-on-primary font-semibold">Vet Visit</span>
           </button>
         </div>
 

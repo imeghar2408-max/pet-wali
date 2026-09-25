@@ -43,8 +43,6 @@ export const ArrivalAndHandoverScreen: React.FC = () => {
         return 'START TRAINING SESSION';
       case 'PET_GROOMER':
         return 'START GROOMING SESSION';
-      case 'PET_BOARDING':
-        return 'START BOARDING CHECK-IN';
       default:
         return 'START SERVICE';
     }

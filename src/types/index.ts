@@ -1,12 +1,9 @@
 export type UserRole =
   | 'USER'
-  | 'ADMIN'
   | 'PROVIDER'
   | 'WALKER'
-  | 'VET'
   | 'GROOMER'
-  | 'TRAINER'
-  | 'BOARDING_PROVIDER';
+  | 'TRAINER';
 
 export interface User {
   id: string;
@@ -106,7 +103,7 @@ export interface ServiceCategory {
   isActive?: boolean;
 }
 
-export type BookingStatus = 'Pending' | 'Confirmed' | 'Active' | 'Completed' | 'Cancelled';
+export type BookingStatus = 'REQUESTED' | 'MATCHING' | 'CAPTAIN_ASSIGNED' | 'AWAITING_USER_CONFIRMATION' | 'CONFIRMED' | 'ARRIVING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'Pending' | 'Confirmed' | 'Active' | 'Completed' | 'Cancelled';
 
 export interface SafeZoneConfig {
   id: string;

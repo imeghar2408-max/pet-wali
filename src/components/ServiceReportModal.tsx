@@ -774,12 +774,12 @@ export const ServiceReportModal: React.FC<ServiceReportModalProps> = ({
                   <p className="text-xs text-slate-500">Photos uploaded live during {report.petName}&apos;s session</p>
                 </div>
                 <span className="text-xs text-slate-500 font-bold">
-                  {report.photos?.length || 0} photos
+                  {('photos' in report && report.photos.length) || 0} photos
                 </span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {report.photos?.map((photo, idx) => (
+                {('photos' in report ? report.photos : []).map((photo, idx) => (
                   <div key={idx} className="bg-slate-50 border border-slate-200/80 rounded-2xl overflow-hidden shadow-xs">
                     <div className="relative h-44 bg-slate-200">
                       <img src={photo.url} alt={photo.caption} className="w-full h-full object-cover" />

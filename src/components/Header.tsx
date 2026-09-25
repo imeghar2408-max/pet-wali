@@ -14,7 +14,7 @@ export const Header: React.FC<HeaderProps> = ({
   showBack,
   onNotificationClick,
 }) => {
-  const { user, currentTab, setCurrentTab, unreadNotifsCount, setAppMode, setShowSplash } = useApp();
+  const { user, currentTab, setCurrentTab, unreadNotifsCount, setShowSplash } = useApp();
 
   const handleBack = () => {
     if (
@@ -94,7 +94,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Right Action Icons: Intro Tour, Admin Console Toggle, Notifications & User Profile */}
+        {/* Right Action Icons: Intro Tour, notifications and profile */}
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => setShowSplash(true)}
@@ -104,23 +104,6 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="material-symbols-outlined text-[18px]">auto_awesome</span>
           </button>
 
-          <button
-            onClick={() => setAppMode('PROVIDER')}
-            className="px-2 py-1 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 text-[11px] font-bold flex items-center gap-1 shadow-xs transition-colors"
-            title="Switch to PetCare Provider Captain App"
-          >
-            <span>🐕</span>
-            <span>Captain</span>
-          </button>
-
-          <button
-            onClick={() => setAppMode('ADMIN')}
-            className="px-2 py-1 rounded-lg bg-slate-900 text-slate-100 hover:bg-slate-800 text-[11px] font-semibold flex items-center gap-1 shadow-xs transition-colors"
-            title="Open Platform Admin Console"
-          >
-            <span className="material-symbols-outlined text-[14px] text-emerald-400">shield_lock</span>
-            <span className="hidden sm:inline">Admin</span>
-          </button>
 
           <button
             aria-label="Notifications"

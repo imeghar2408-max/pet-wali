@@ -148,12 +148,6 @@ export const ProviderHomeScreen: React.FC = () => {
           >
             ✂️ Groom (Bella)
           </button>
-          <button
-            onClick={() => handleSimulateDispatch('PET_BOARDING')}
-            className="py-2 px-2.5 rounded-xl bg-white border border-amber-200 text-slate-800 hover:bg-amber-100/50 text-[11px] font-bold text-center transition-colors shadow-xs"
-          >
-            🏠 Board (Milo)
-          </button>
         </div>
       </div>
 

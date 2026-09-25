@@ -33,8 +33,6 @@ export const IncomingRequestModal: React.FC = () => {
         return { label: 'NEW TRAINING REQUEST', icon: '🎓', bg: 'bg-blue-600 text-white' };
       case 'PET_GROOMER':
         return { label: 'NEW GROOMING REQUEST', icon: '✂️', bg: 'bg-teal-600 text-white' };
-      case 'PET_BOARDING':
-        return { label: 'NEW BOARDING ASSIGNMENT', icon: '🏠', bg: 'bg-indigo-600 text-white' };
       default:
         return { label: 'NEW SERVICE ASSIGNMENT', icon: '🐾', bg: 'bg-slate-800 text-white' };
     }

@@ -4,7 +4,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import {
   initialUser,
-  initialUsers,
   initialPets,
   initialServices,
   initialProviders,
@@ -14,11 +13,21 @@ import {
   initialConversations,
   initialMessages,
   initialNotifications,
-  initialPayments,
-  initialReviews,
-  initialPlatformSettings,
 } from './src/server/db.ts';
-import { EmergencyIncident, User, Payment } from './src/types/index.ts';
+import { EmergencyIncident } from './src/types/index.ts';
+import {
+  AuthRole,
+  CaptainService,
+  currentAuthUser,
+  expireSessionCookie,
+  invalidateSession,
+  issueSession,
+  isCaptainService,
+  loginAccount,
+  registerAccount,
+  requireAuth,
+  requireRole,
+} from './src/server/auth.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,34 +54,120 @@ async function startServer() {
     res.json({ status: 'ok', service: 'PetCare Shared Backend API', time: new Date().toISOString() });
   });
 
-  // Auth & User Profile
-  app.get('/api/user', (_req: Request, res: Response) => {
-    res.json(currentUser);
+  const registrationHandler = (role: AuthRole) => async (req: Request, res: Response) => {
+    const { name, email, phone, password, confirmPassword } = req.body || {};
+    if (typeof name !== 'string' || name.trim().length < 2 || name.trim().length > 100 ||
+        typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+        typeof phone !== 'string' || phone.trim().length < 7 || phone.trim().length > 32 ||
+        typeof password !== 'string' || password.length < 10 || password.length > 128 ||
+        password !== confirmPassword) {
+      res.status(400).json({ error: 'Please provide valid registration details. Passwords must match and contain at least 10 characters.' });
+      return;
+    }
+
+    let captainProfile: { yearsExperience: number; servicesOffered: CaptainService[]; bio: string; profilePhoto?: string } = {
+      yearsExperience: 0,
+      servicesOffered: [],
+      bio: '',
+    };
+    if (role === 'CAPTAIN') {
+      const { yearsExperience, servicesOffered, bio, profilePhoto } = req.body;
+      if (!Number.isInteger(yearsExperience) || yearsExperience < 0 || yearsExperience > 80 ||
+          !Array.isArray(servicesOffered) || servicesOffered.length < 1 ||
+          !servicesOffered.every(isCaptainService) || typeof bio !== 'string' || bio.trim().length > 800 ||
+          (profilePhoto !== undefined && (typeof profilePhoto !== 'string' || profilePhoto.length > 2048))) {
+        res.status(400).json({ error: 'Please provide valid Captain profile details and select Walking, Grooming, or Training.' });
+        return;
+      }
+      captainProfile = { yearsExperience, servicesOffered, bio, profilePhoto };
+    }
+
+    try {
+      const result = await registerAccount({
+        name, email, phone, password, role,
+        profilePhoto: captainProfile.profilePhoto,
+        yearsExperience: captainProfile.yearsExperience,
+        servicesOffered: captainProfile.servicesOffered,
+        bio: captainProfile.bio,
+      });
+      issueSession(res, result.token);
+      res.status(201).json({ user: result.user });
+    } catch (error: any) {
+      if (String(error?.code || '').includes('SQLITE_CONSTRAINT')) {
+        res.status(409).json({ error: 'An account with these details could not be created. If you already registered, please sign in.' });
+        return;
+      }
+      console.error('Registration error:', error);
+      res.status(500).json({ error: 'We could not create your account right now.' });
+    }
+  };
+
+  const loginHandler = (role: AuthRole) => async (req: Request, res: Response) => {
+    const { email, password } = req.body || {};
+    if (typeof email !== 'string' || typeof password !== 'string' || password.length > 128) {
+      res.status(401).json({ error: 'Invalid email or password.' });
+      return;
+    }
+    const result = await loginAccount(email, password, role);
+    if (!result) {
+      res.status(401).json({ error: 'Invalid email or password.' });
+      return;
+    }
+    issueSession(res, result.token);
+    res.json({ user: result.user });
+  };
+
+  app.post('/api/auth/user/register', registrationHandler('USER'));
+  app.post('/api/auth/user/login', loginHandler('USER'));
+  app.post('/api/auth/captain/register', registrationHandler('CAPTAIN'));
+  app.post('/api/auth/captain/login', loginHandler('CAPTAIN'));
+  app.get('/api/auth/me', requireAuth, (req: Request, res: Response) => {
+    res.json({ user: req.authUser });
+  });
+  app.post('/api/auth/logout', (req: Request, res: Response) => {
+    invalidateSession(req);
+    expireSessionCookie(res);
+    res.status(204).end();
   });
 
-  app.put('/api/user', (req: Request, res: Response) => {
-    currentUser = { ...currentUser, ...req.body };
-    res.json(currentUser);
+  app.get('/api/captain/profile', requireRole('CAPTAIN'), (req: Request, res: Response) => {
+    res.json({ user: req.authUser });
+  });
+  app.get('/api/captain/requests', requireRole('CAPTAIN'), (req: Request, res: Response) => {
+    const captainId = req.authUser!.id;
+    const services = req.authUser!.captainProfile?.servicesOffered || [];
+    const requests = bookings.filter((booking) => booking.providerId === captainId ||
+      (booking.status === 'MATCHING' && services.some((service) => booking.serviceName.toUpperCase().includes(service))));
+    res.json(requests);
+  });
+
+  // Auth & User Profile
+  app.get('/api/user', requireRole('USER'), (req: Request, res: Response) => {
+    res.json(req.authUser);
+  });
+
+  app.put('/api/user', requireRole('USER'), (req: Request, res: Response) => {
+    res.status(501).json({ error: 'Profile updates are not available through this endpoint yet.' });
   });
 
   // Pets
-  app.get('/api/pets', (_req: Request, res: Response) => {
-    res.json(pets);
+  app.get('/api/pets', requireRole('USER'), (req: Request, res: Response) => {
+    res.json(pets.filter((pet: any) => pet.userId === req.authUser!.id));
   });
 
-  app.post('/api/pets', (req: Request, res: Response) => {
+  app.post('/api/pets', requireRole('USER'), (req: Request, res: Response) => {
     const newPet = {
       ...req.body,
       id: `pet_${Date.now()}`,
-      userId: currentUser.id,
+      userId: req.authUser!.id,
       monthlyStats: { month: 'Current', kmWalked: 0, sessions: 0, safeZonePercent: 100 },
     };
     pets.unshift(newPet);
     res.status(201).json(newPet);
   });
 
-  app.put('/api/pets/:id', (req: Request, res: Response) => {
-    const idx = pets.findIndex((p) => p.id === req.params.id);
+  app.put('/api/pets/:id', requireRole('USER'), (req: Request, res: Response) => {
+    const idx = pets.findIndex((p: any) => p.id === req.params.id && p.userId === req.authUser!.id);
     if (idx !== -1) {
       pets[idx] = { ...pets[idx], ...req.body };
       res.json(pets[idx]);
@@ -81,8 +176,8 @@ async function startServer() {
     }
   });
 
-  app.delete('/api/pets/:id', (req: Request, res: Response) => {
-    pets = pets.filter((p) => p.id !== req.params.id);
+  app.delete('/api/pets/:id', requireRole('USER'), (req: Request, res: Response) => {
+    pets = pets.filter((p: any) => p.id !== req.params.id || p.userId !== req.authUser!.id);
     res.json({ success: true });
   });
 
@@ -101,15 +196,15 @@ async function startServer() {
   });
 
   // Bookings
-  app.get('/api/bookings', (_req: Request, res: Response) => {
-    res.json(bookings);
+  app.get('/api/bookings', requireRole('USER'), (req: Request, res: Response) => {
+    res.json(bookings.filter((booking) => booking.userId === req.authUser!.id));
   });
 
-  app.post('/api/bookings', (req: Request, res: Response) => {
+  app.post('/api/bookings', requireRole('USER'), (req: Request, res: Response) => {
     const newBooking = {
       ...req.body,
       id: `bk_${Date.now()}`,
-      userId: currentUser.id,
+      userId: req.authUser!.id,
       createdAt: new Date().toISOString(),
     };
     bookings.unshift(newBooking);
@@ -217,93 +312,6 @@ async function startServer() {
   // Notifications
   app.get('/api/notifications', (_req: Request, res: Response) => {
     res.json(notifications);
-  });
-
-  // Admin Authorization Middleware (Enforces role = 'ADMIN' at the backend level)
-  const requireAdmin = (req: Request, res: Response, next: express.NextFunction) => {
-    const authRole = (req.headers['x-user-role'] as string) || currentUser.role;
-    if (authRole !== 'ADMIN') {
-      res.status(403).json({
-        error: 'Forbidden: Access Denied. Administrator role (role=ADMIN) is required to access this resource.',
-        code: 'ADMIN_ACCESS_REQUIRED',
-      });
-      return;
-    }
-    next();
-  };
-
-  // Shared Admin API Endpoints (Protected at Backend Level)
-  app.get('/api/admin/overview', requireAdmin, (_req: Request, res: Response) => {
-    const todayBookings = bookings.filter((b) => b.date.toLowerCase().includes('today') || b.date.includes('2026-09-25'));
-    const activeEmergenciesCount = emergencies.filter((e) => e.status !== 'Resolved' && e.status !== 'Cancelled').length;
-    const totalRev = bookings.reduce((sum, b) => (b.status !== 'Cancelled' ? sum + b.totalAmount : sum), 0);
-
-    res.json({
-      totalUsers: 1420 + pets.length,
-      activeUsers: 840,
-      totalPets: pets.length,
-      activeProviders: initialProviders.filter((p) => p.status !== 'Suspended').length,
-      todayBookings: todayBookings.length,
-      activeBookings: bookings.filter((b) => b.status === 'Active').length,
-      completedBookings: bookings.filter((b) => b.status === 'Completed').length,
-      cancelledBookings: bookings.filter((b) => b.status === 'Cancelled').length,
-      revenue: totalRev,
-      activeDogWalks: activeWalk && activeWalk.status === 'in_progress' ? 1 : 0,
-      activeEmergencies: activeEmergenciesCount,
-      pendingProviderVerifications: initialProviders.filter((p) => p.verificationStatus === 'pending').length,
-    });
-  });
-
-  app.get('/api/admin/users', requireAdmin, (_req: Request, res: Response) => {
-    res.json(initialUsers);
-  });
-
-  app.put('/api/admin/users/:id/status', requireAdmin, (req: Request, res: Response) => {
-    const u = initialUsers.find((usr: User) => usr.id === req.params.id);
-    if (u) {
-      u.status = req.body.status;
-      res.json(u);
-    } else {
-      res.status(404).json({ error: 'User not found' });
-    }
-  });
-
-  app.put('/api/admin/providers/:id/status', requireAdmin, (req: Request, res: Response) => {
-    const prov = initialProviders.find((p) => p.id === req.params.id);
-    if (prov) {
-      if (req.body.status) prov.status = req.body.status;
-      if (req.body.verificationStatus) prov.verificationStatus = req.body.verificationStatus;
-      res.json(prov);
-    } else {
-      res.status(404).json({ error: 'Provider not found' });
-    }
-  });
-
-  app.get('/api/admin/payments', requireAdmin, (_req: Request, res: Response) => {
-    res.json(initialPayments);
-  });
-
-  app.post('/api/admin/payments/:id/refund', requireAdmin, (req: Request, res: Response) => {
-    const p = initialPayments.find((pay: Payment) => pay.id === req.params.id);
-    if (p) {
-      p.status = 'refunded';
-      res.json(p);
-    } else {
-      res.status(404).json({ error: 'Payment not found' });
-    }
-  });
-
-  app.get('/api/admin/reviews', requireAdmin, (_req: Request, res: Response) => {
-    res.json(initialReviews);
-  });
-
-  app.get('/api/admin/settings', requireAdmin, (_req: Request, res: Response) => {
-    res.json(initialPlatformSettings);
-  });
-
-  app.put('/api/admin/settings', requireAdmin, (req: Request, res: Response) => {
-    Object.assign(initialPlatformSettings, req.body);
-    res.json(initialPlatformSettings);
   });
 
   // Vite integration or static serving

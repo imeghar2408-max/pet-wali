@@ -6,8 +6,7 @@
 export type ProviderServiceType =
   | 'DOG_WALKER'
   | 'DOG_TRAINER'
-  | 'PET_GROOMER'
-  | 'PET_BOARDING';
+  | 'PET_GROOMER';
 
 export type AssignmentStatus =
   | 'PENDING_ACCEPTANCE'

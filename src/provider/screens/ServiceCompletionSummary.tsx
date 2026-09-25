@@ -58,8 +58,6 @@ export const ServiceCompletionSummary: React.FC = () => {
         return 'COMPLETE TRAINING';
       case 'PET_GROOMER':
         return 'COMPLETE GROOMING';
-      case 'PET_BOARDING':
-        return 'COMPLETE BOARDING';
       default:
         return 'COMPLETE SERVICE';
     }

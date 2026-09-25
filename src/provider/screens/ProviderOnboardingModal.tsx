@@ -64,7 +64,6 @@ export const ProviderOnboardingModal: React.FC = () => {
     { id: 'DOG_WALKER', label: 'Dog Walking', icon: '🐕', desc: 'GPS-tracked neighborhood safe walks' },
     { id: 'DOG_TRAINER', label: 'Dog Training', icon: '🎓', desc: 'Obedience, recall & behavioral drills' },
     { id: 'PET_GROOMER', label: 'Pet Grooming', icon: '✂️', desc: 'Bathing, coat trims, nails & hygiene' },
-    { id: 'PET_BOARDING', label: 'Pet Boarding', icon: '🏠', desc: 'Overnight hosting & dedicated pet care' },
   ];
 
   return (
@@ -75,7 +74,7 @@ export const ProviderOnboardingModal: React.FC = () => {
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-emerald-400" />
             <span className="text-xs uppercase font-extrabold tracking-wider text-emerald-400">
-              PetCare Captain Onboarding
+              PETCARE CAPTAIN Onboarding
             </span>
           </div>
           <button
@@ -108,12 +107,12 @@ export const ProviderOnboardingModal: React.FC = () => {
                 <ShieldCheck className="w-10 h-10" />
               </div>
               <div>
-                <h3 className="text-2xl font-black text-slate-900">PetCare Provider</h3>
+                <h3 className="text-2xl font-black text-slate-900">PETCARE CAPTAIN</h3>
                 <p className="text-xs text-slate-500 uppercase tracking-widest font-bold mt-0.5">
                   Verified Captain Platform
                 </p>
                 <p className="text-xs text-slate-600 max-w-xs mx-auto mt-2 leading-relaxed">
-                  Join India's premier verified network for professional dog walkers, trainers, groomers, and boarding providers. Automatic ride-style job dispatches with guaranteed weekly payouts.
+                  Join the verified network for professional dog walkers, trainers, and groomers. Automatic ride-style job dispatches with guaranteed weekly payouts.
                 </p>
               </div>
 
@@ -262,7 +261,7 @@ export const ProviderOnboardingModal: React.FC = () => {
               </div>
 
               <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[11px] text-slate-600">
-                🔒 Note: Veterinary, hospital, and medical consultation services are not supported on PetCare Provider.
+                🔒 Note: Veterinary, hospital, and medical consultation services are not supported on PETCARE CAPTAIN.
               </div>
 
               <div className="flex gap-2">

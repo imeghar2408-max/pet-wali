@@ -28,12 +28,7 @@ export const ServicesMarketplaceScreen: React.FC = () => {
     { id: 'all', label: 'All Services', icon: 'grid_view' },
     { id: 'dog-walking', label: 'Dog Walking', icon: 'directions_walk' },
     { id: 'grooming', label: 'Grooming', icon: 'content_cut' },
-    { id: 'tele-vet', label: 'Tele-Vet', icon: 'video_call' },
-    { id: 'home-vet', label: 'Home Vet', icon: 'home_health' },
-    { id: 'boarding', label: 'Boarding', icon: 'apartment' },
     { id: 'training', label: 'Training', icon: 'sports_score' },
-    { id: 'adoption', label: 'Adoption', icon: 'favorite' },
-    { id: 'mating', label: 'Pet Mating', icon: 'diversity_1' },
   ];
 
   // Filtered Services
